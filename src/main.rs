@@ -1,5 +1,8 @@
 #![allow(warnings)]
 
+//PACKAGES
+use rand::Rng;
+
 // MODULES
 mod keyboard;
 pub use crate::keyboard::keyboard_md;
@@ -12,6 +15,30 @@ pub struct Main
 
 impl Main
 {
+	fn print(&self)
+	{
+		println!("\n");
+		for i in self.board { println!(" {:?} {:?} {:?} {:?}", i[0], i[1], i[2], i[3]); }
+		println!("\n");
+	}
+
+
+	fn first_gen(&mut self)
+	{
+		let random = || -> i64
+		{
+			let mut rng = rand::thread_rng();
+	    let num: i64 = rng.gen_range(0..=3);
+    	return num;
+		};
+
+		{
+	    self.board[random() as usize][random() as usize] = 2;
+	    self.board[random() as usize][random() as usize] = 2;
+	  }
+	}
+
+
 	fn up(&self)
 	{
 		println!("up");
@@ -39,7 +66,7 @@ impl Main
 
 fn main()
 {
-	let main = Main {
+	let mut main = Main {
  		board: [
  			[0, 0, 0, 0],
  			[0, 0, 0, 0],
@@ -48,7 +75,8 @@ fn main()
  		],
  	};
 
- 	keyboard_md::start(&main);
+ 	main.first_gen();
+ 	main.print();
 
- 	//println!("{:?}", main.board);
+ 	keyboard_md::start(&main);
 }
